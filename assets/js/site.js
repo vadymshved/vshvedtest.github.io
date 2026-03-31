@@ -248,6 +248,12 @@ const siteConfig = {
   contactEmail: 'shvedvadym@gmail.com',
   travelProjectUrl: 'https://www.instagram.com/vadymtravels/',
   cvFile: 'assets/docs/CV.pdf',
+
+  resourceLinks: {
+    schoolChemistry: 'resources.html',
+    chemistryMaterials: 'resources.html',
+    interactiveTools: 'resources.html'
+  },
   institutionLinks: [
     { label: 'Taras Shevchenko National University of Kyiv', url: 'https://knu.ua/' },
     { label: 'Institute of High Technologies', url: 'https://iht.knu.ua/' },
@@ -300,6 +306,13 @@ function applySiteConfig() {
     link.setAttribute('href', siteConfig.travelProjectUrl);
     link.setAttribute('target', '_blank');
     link.setAttribute('rel', 'noreferrer');
+  });
+
+
+  document.querySelectorAll('[data-resource-link]').forEach((link) => {
+    const key = link.getAttribute('data-resource-link');
+    const href = (siteConfig.resourceLinks && siteConfig.resourceLinks[key]) || 'resources.html';
+    link.setAttribute('href', href);
   });
 
   const rail = document.getElementById('homeInstitutionLinks');
