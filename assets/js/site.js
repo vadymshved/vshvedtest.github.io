@@ -197,3 +197,136 @@ const translations = {
         link.setAttribute('aria-current', 'page');
       }
     });
+
+
+// Mobile menu
+const mobileToggle = document.getElementById('mobile-toggle');
+const mainNav = document.querySelector('.nav-shell');
+
+if (mobileToggle && mainNav) {
+  const closeMobileMenu = () => {
+    mobileToggle.classList.remove('active');
+    mainNav.classList.remove('active');
+    document.body.classList.remove('menu-open');
+  };
+
+  mobileToggle.addEventListener('click', () => {
+    const nextState = !mainNav.classList.contains('active');
+    mobileToggle.classList.toggle('active', nextState);
+    mainNav.classList.toggle('active', nextState);
+    document.body.classList.toggle('menu-open', nextState);
+  });
+
+  document.querySelectorAll('.desktop-nav .nav-link').forEach((link) => {
+    link.addEventListener('click', () => {
+      closeMobileMenu();
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeMobileMenu();
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!document.body.classList.contains('menu-open')) return;
+    if (mainNav.contains(event.target) || mobileToggle.contains(event.target)) return;
+    closeMobileMenu();
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) {
+      closeMobileMenu();
+    }
+  });
+}
+
+
+const siteConfig = {
+  bookingUrl: 'https://calendly.com/vadymshved/triallesson/',
+  contactEmail: 'shvedvadym@gmail.com',
+  travelProjectUrl: 'https://www.instagram.com/vadymtravels/',
+  cvFile: 'assets/docs/CV.pdf',
+  institutionLinks: [
+    { label: 'Taras Shevchenko National University of Kyiv', url: 'https://knu.ua/' },
+    { label: 'Institute of High Technologies', url: 'https://iht.knu.ua/' },
+    { label: 'École Centrale de Lyon', url: 'https://www.ec-lyon.fr/' },
+    { label: 'PHBern', url: 'https://www.phbern.ch/' },
+    { label: 'University of Basel', url: 'https://www.unibas.ch/' },
+    { label: 'Institut Lumière Matière', url: 'https://ilm.univ-lyon1.fr/' },
+    { label: 'I.F.LAB', url: 'https://iflab.com/' },
+    { label: 'Life Chemicals', url: 'https://lifechemicals.com/' },
+    { label: 'Enamine', url: 'https://enamine.net/' },
+    { label: 'Institute of Organic Chemistry NAS', url: 'https://ioch.org.ua/en/' },
+    { label: 'Swiss Chem Olymp', url: 'https://chemistry.olympiad.ch/en/' },
+    { label: 'Ukr Chem Olymp', url: 'https://www.ukrchemolimp.com/' },
+    { label: '#brobots', url: 'https://brobots.org.ua/' },
+    { label: 'Campus Muristalden', url: 'https://www.muristalden.ch/' },
+    { label: 'Gymnasium Neufeld', url: 'https://gymneufeld.ch/' },
+    { label: 'Standort Manuel', url: 'https://kirchenfeld-schosshalde.ch/manuel/' },
+    { label: 'Sekundarschule Hochfeld 1', url: 'https://laenggasse-felsenau.ch/hochfeld_1/' },
+    { label: 'Oberstufenschule Buchholz', url: 'https://www.buchholz.ch/' },
+    { label: '@vadymtravels', url: 'https://www.instagram.com/vadymtravels/' }
+  ]
+};
+
+function applySiteConfig() {
+  const bookingUrl = siteConfig.bookingUrl || '#';
+  const contactEmail = siteConfig.contactEmail || 'your.email@example.com';
+  const mailtoHref = `mailto:${contactEmail}`;
+
+  document.querySelectorAll('[data-booking-link]').forEach((link) => {
+    link.setAttribute('href', bookingUrl);
+    if (!link.getAttribute('target')) {
+      link.setAttribute('target', '_blank');
+      link.setAttribute('rel', 'noreferrer');
+    }
+  });
+
+  document.querySelectorAll('[data-contact-email-link]').forEach((link) => {
+    link.setAttribute('href', mailtoHref);
+  });
+
+  document.querySelectorAll('[data-contact-email-text]').forEach((node) => {
+    node.textContent = contactEmail;
+  });
+
+  document.querySelectorAll('[data-cv-link]').forEach((link) => {
+    link.setAttribute('href', siteConfig.cvFile);
+  });
+
+  document.querySelectorAll('[data-travel-link]').forEach((link) => {
+    link.setAttribute('href', siteConfig.travelProjectUrl);
+    link.setAttribute('target', '_blank');
+    link.setAttribute('rel', 'noreferrer');
+  });
+
+  const rail = document.getElementById('homeInstitutionLinks');
+  if (rail) {
+    rail.innerHTML = '';
+    siteConfig.institutionLinks.forEach((item) => {
+      const a = document.createElement('a');
+      a.className = 'institution-link-chip';
+      a.href = item.url;
+      a.target = '_blank';
+      a.rel = 'noreferrer';
+      a.textContent = item.label;
+      rail.appendChild(a);
+    });
+  }
+}
+
+applySiteConfig();
+
+
+// About page accordions: start collapsed and toggle cleanly
+document.querySelectorAll('.skills-accordion, .bio-accordion').forEach((details) => {
+  details.removeAttribute('open');
+  const summary = details.querySelector('summary');
+  if (!summary) return;
+  summary.addEventListener('click', (event) => {
+    event.preventDefault();
+    details.toggleAttribute('open');
+  });
+});
